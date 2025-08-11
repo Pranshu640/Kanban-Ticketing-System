@@ -30,12 +30,22 @@ interface TicketHistory {
   description: string;
 }
 
-interface EditableField {
+interface EditableField<T> {
   field: keyof Ticket;
   isEditing: boolean;
-  value: string | number | string[];
-  originalValue: string | number | string[];
+  value: T;
+  originalValue: T;
 }
+
+type EditableFieldsState = {
+  title: EditableField<string>;
+  description: EditableField<string>;
+  priority: EditableField<PriorityEnum>;
+  assignee: EditableField<string>;
+  dueDate: EditableField<string>; // ISO date string (yyyy-mm-dd) or ''
+  estimatedHours: EditableField<number | ''>;
+  tags: EditableField<string[]>;
+};
 
 const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
   isOpen,
@@ -45,7 +55,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
 }) => {
   const { actions } = useTickets();
   const [isEditing, setIsEditing] = useState(false);
-  const [editableFields, setEditableFields] = useState<Record<string, EditableField>>({});
+  const [editableFields, setEditableFields] = useState<EditableFieldsState | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeletingTicket, setIsDeletingTicket] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -110,7 +120,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
   // Initialize editable fields when ticket changes
   useEffect(() => {
     if (ticket) {
-      const fields: Record<string, EditableField> = {
+      const fields: EditableFieldsState = {
         title: {
           field: 'title',
           isEditing: false,
@@ -144,8 +154,8 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
         estimatedHours: {
           field: 'estimatedHours',
           isEditing: false,
-          value: ticket.estimatedHours || '',
-          originalValue: ticket.estimatedHours || '',
+          value: ticket.estimatedHours ?? '',
+          originalValue: ticket.estimatedHours ?? '',
         },
         tags: {
           field: 'tags',
@@ -162,62 +172,46 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
   }, [ticket, generateTicketHistory]);
 
   // Validation functions
-  const validateField = (field: string, value: string | number | string[]): string | undefined => {
+  const validateField = (field: keyof EditableFieldsState, value: EditableFieldsState[keyof EditableFieldsState]['value']): string | undefined => {
     switch (field) {
-      case 'title':
-        if (!value || value.trim().length === 0) {
-          return 'Title is required';
-        }
-        if (value.trim().length < 3) {
-          return 'Title must be at least 3 characters long';
-        }
-        if (value.trim().length > 100) {
-          return 'Title must be less than 100 characters';
-        }
+      case 'title': {
+        const v = value as string;
+        if (!v || v.trim().length === 0) return 'Title is required';
+        if (v.trim().length < 3) return 'Title must be at least 3 characters long';
+        if (v.trim().length > 100) return 'Title must be less than 100 characters';
         break;
-
-      case 'description':
-        if (!value || value.trim().length === 0) {
-          return 'Description is required';
-        }
-        if (value.trim().length < 10) {
-          return 'Description must be at least 10 characters long';
-        }
-        if (value.trim().length > 1000) {
-          return 'Description must be less than 1000 characters';
-        }
+      }
+      case 'description': {
+        const v = value as string;
+        if (!v || v.trim().length === 0) return 'Description is required';
+        if (v.trim().length < 10) return 'Description must be at least 10 characters long';
+        if (v.trim().length > 1000) return 'Description must be less than 1000 characters';
         break;
-
-      case 'assignee':
-        if (!value || value.trim().length === 0) {
-          return 'Assignee is required';
-        }
+      }
+      case 'assignee': {
+        const v = value as string;
+        if (!v || v.trim().length === 0) return 'Assignee is required';
         break;
-
-      case 'dueDate':
-        if (value) {
-          const selectedDate = new Date(value);
+      }
+      case 'dueDate': {
+        const v = value as string;
+        if (v) {
+          const selectedDate = new Date(v);
           const today = new Date();
           today.setHours(0, 0, 0, 0);
-
-          if (selectedDate < today) {
-            return 'Due date cannot be in the past';
-          }
+          if (selectedDate < today) return 'Due date cannot be in the past';
         }
         break;
-
-      case 'estimatedHours':
-        if (value !== undefined && value !== '') {
-          const hours = Number(value);
-          if (isNaN(hours) || hours < 0) {
-            return 'Estimated hours must be a positive number';
-          }
-          if (hours > 1000) {
-            return 'Estimated hours must be less than 1000';
-          }
+      }
+      case 'estimatedHours': {
+        const v = value as number | '';
+        if (v !== undefined && v !== '') {
+          const hours = Number(v);
+          if (isNaN(hours) || hours < 0) return 'Estimated hours must be a positive number';
+          if (hours > 1000) return 'Estimated hours must be less than 1000';
         }
         break;
-
+      }
       default:
         break;
     }
@@ -225,132 +219,127 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
   };
 
   // Start editing a field
-  const startEditing = (fieldName: string) => {
-    setEditableFields(prev => ({
+  const startEditing = (fieldName: keyof EditableFieldsState) => {
+    if (!editableFields) return;
+    setEditableFields(prev => prev ? ({
       ...prev,
       [fieldName]: {
         ...prev[fieldName],
         isEditing: true,
       },
-    }));
+    }) : prev);
     setIsEditing(true);
   };
 
   // Cancel editing a field
-  const cancelEditing = (fieldName: string) => {
-    setEditableFields(prev => ({
+  const cancelEditing = (fieldName: keyof EditableFieldsState) => {
+    if (!editableFields) return;
+    setEditableFields(prev => prev ? ({
       ...prev,
       [fieldName]: {
         ...prev[fieldName],
         isEditing: false,
         value: prev[fieldName].originalValue,
       },
-    }));
+    }) : prev);
 
-    // Clear error for this field
     setErrors(prev => {
       const newErrors = { ...prev };
-      delete newErrors[fieldName];
+      delete newErrors[fieldName as string];
       return newErrors;
     });
 
-    // Check if any fields are still being edited
-    const stillEditing = Object.values(editableFields).some(
-      field => field.field !== fieldName && field.isEditing
-    );
+    const stillEditing = Object.entries(editableFields).some(([key, field]) => (key as keyof EditableFieldsState) !== fieldName && field.isEditing);
     if (!stillEditing) {
       setIsEditing(false);
     }
   };
 
   // Save field changes
-  const saveField = async (fieldName: string) => {
+  const saveField = async (fieldName: keyof EditableFieldsState) => {
+    if (!editableFields || !ticket) return;
     const field = editableFields[fieldName];
-    if (!field || !ticket) return;
 
-    // Validate field
-    const error = validateField(fieldName, field.value);
+    const error = validateField(fieldName, field.value as any);
     if (error) {
-      setErrors(prev => ({ ...prev, [fieldName]: error }));
+      setErrors(prev => ({ ...prev, [fieldName as string]: error }));
       return;
     }
 
-    // Clear error
     setErrors(prev => {
       const newErrors = { ...prev };
-      delete newErrors[fieldName];
+      delete newErrors[fieldName as string];
       return newErrors;
     });
 
     setIsSubmitting(true);
 
     try {
-      // Prepare update data
       const updates: Partial<Ticket> = {};
-
       if (fieldName === 'dueDate') {
-        updates.dueDate = field.value ? new Date(field.value) : undefined;
+        const v = field.value as string;
+        updates.dueDate = v ? new Date(v) : undefined;
       } else if (fieldName === 'estimatedHours') {
-        updates.estimatedHours = field.value ? Number(field.value) : undefined;
-      } else {
-        updates[field.field] = field.value;
+        const v = field.value as number | '';
+        updates.estimatedHours = v !== '' ? Number(v) : undefined;
+      } else if (fieldName === 'tags') {
+        updates.tags = field.value as string[];
+      } else if (fieldName === 'priority') {
+        updates.priority = field.value as PriorityEnum;
+      } else if (fieldName === 'title' || fieldName === 'description' || fieldName === 'assignee') {
+        updates[field.field] = field.value as any;
       }
 
-      // Update ticket
       actions.updateTicket(ticket.id, updates);
 
-      // Update field state
-      setEditableFields(prev => ({
+      setEditableFields(prev => prev ? ({
         ...prev,
         [fieldName]: {
           ...prev[fieldName],
           isEditing: false,
-          originalValue: field.value,
+          originalValue: prev[fieldName].value,
         },
-      }));
+      }) : prev);
 
-      // Add to history
+      const label = (fieldName as string).charAt(0).toUpperCase() + (fieldName as string).slice(1);
       const newHistoryItem: TicketHistory = {
         id: Date.now().toString(),
         timestamp: new Date(),
         action: 'updated',
         field: fieldName,
-        oldValue: field.originalValue,
-        newValue: field.value,
-        description: `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} updated`,
+        oldValue: field.originalValue as any,
+        newValue: field.value as any,
+        description: `${label} updated`,
       };
       setHistory(prev => [newHistoryItem, ...prev]);
 
-      // Check if any fields are still being edited
-      const stillEditing = Object.values(editableFields).some(
-        f => f.field !== fieldName && f.isEditing
-      );
+      const stillEditing = Object.entries(editableFields).some(([key, f]) => (key as keyof EditableFieldsState) !== fieldName && f.isEditing);
       if (!stillEditing) {
         setIsEditing(false);
       }
-
     } catch (error) {
       console.error('Failed to update ticket:', error);
-      setErrors(prev => ({ ...prev, [fieldName]: 'Failed to save changes' }));
+      setErrors(prev => ({ ...prev, [fieldName as string]: 'Failed to save changes' }));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   // Update field value
-  const updateFieldValue = (fieldName: string, value: string | number | string[]) => {
-    setEditableFields(prev => ({
+  const updateFieldValue = <K extends keyof EditableFieldsState>(fieldName: K, value: EditableFieldsState[K]['value']) => {
+    setEditableFields(prev => prev ? ({
       ...prev,
       [fieldName]: {
         ...prev[fieldName],
         value,
       },
-    }));
+    }) : prev);
   };
 
   // Handle tag toggle
   const toggleTag = (tag: string) => {
-    const currentTags = editableFields.tags?.value || [];
+    if (!editableFields) return;
+    const currentTags = editableFields.tags.value;
     const newTags = currentTags.includes(tag)
       ? currentTags.filter((t: string) => t !== tag)
       : [...currentTags, tag];
@@ -397,7 +386,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
     label: assignee,
   }));
 
-  if (!ticket) return null;
+  if (!ticket || !editableFields) return null;
 
   return (
     <>
@@ -447,7 +436,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
             {/* Title Field */}
             <div className={styles.field}>
               <label className={styles.fieldLabel}>Title</label>
-              {editableFields.title?.isEditing ? (
+              {editableFields.title.isEditing ? (
                 <div className={styles.editingField}>
                   <Input
                     value={editableFields.title.value}
@@ -477,7 +466,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
                 </div>
               ) : (
                 <div className={styles.fieldValue} onClick={() => startEditing('title')}>
-                  <span>{editableFields.title?.value}</span>
+                  <span>{editableFields.title.value}</span>
                   <Button variant="ghost" size="small" iconOnly>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -491,7 +480,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
             {/* Description Field */}
             <div className={styles.field}>
               <label className={styles.fieldLabel}>Description</label>
-              {editableFields.description?.isEditing ? (
+              {editableFields.description.isEditing ? (
                 <div className={styles.editingField}>
                   <Textarea
                     value={editableFields.description.value}
@@ -522,7 +511,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
                 </div>
               ) : (
                 <div className={styles.fieldValue} onClick={() => startEditing('description')}>
-                  <p>{editableFields.description?.value}</p>
+                  <p>{editableFields.description.value}</p>
                   <Button variant="ghost" size="small" iconOnly>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -537,11 +526,11 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
             <div className={styles.fieldRow}>
               <div className={styles.field}>
                 <label className={styles.fieldLabel}>Priority</label>
-                {editableFields.priority?.isEditing ? (
+                {editableFields.priority.isEditing ? (
                   <div className={styles.editingField}>
                     <Select
                       value={editableFields.priority.value}
-                      onChange={(e) => updateFieldValue('priority', e.target.value)}
+                      onChange={(e) => updateFieldValue('priority', e.target.value as PriorityEnum)}
                       options={priorityOptions}
                       fullWidth
                     />
@@ -566,8 +555,8 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
                   </div>
                 ) : (
                   <div className={styles.fieldValue} onClick={() => startEditing('priority')}>
-                    <span className={`${styles.priorityValue} ${styles[editableFields.priority?.value]}`}>
-                      {editableFields.priority?.value.charAt(0).toUpperCase() + editableFields.priority?.value.slice(1)}
+                    <span className={`${styles.priorityValue} ${styles[editableFields.priority.value]}`}>
+                      {editableFields.priority.value.charAt(0).toUpperCase() + editableFields.priority.value.slice(1)}
                     </span>
                     <Button variant="ghost" size="small" iconOnly>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -581,7 +570,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
 
               <div className={styles.field}>
                 <label className={styles.fieldLabel}>Assignee</label>
-                {editableFields.assignee?.isEditing ? (
+                {editableFields.assignee.isEditing ? (
                   <div className={styles.editingField}>
                     <Select
                       value={editableFields.assignee.value}
@@ -610,7 +599,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
                   </div>
                 ) : (
                   <div className={styles.fieldValue} onClick={() => startEditing('assignee')}>
-                    <span>{editableFields.assignee?.value}</span>
+                    <span>{editableFields.assignee.value}</span>
                     <Button variant="ghost" size="small" iconOnly>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -626,7 +615,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
             <div className={styles.fieldRow}>
               <div className={styles.field}>
                 <label className={styles.fieldLabel}>Due Date</label>
-                {editableFields.dueDate?.isEditing ? (
+                {editableFields.dueDate.isEditing ? (
                   <div className={styles.editingField}>
                     <Input
                       type="date"
@@ -657,10 +646,9 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
                 ) : (
                   <div className={styles.fieldValue} onClick={() => startEditing('dueDate')}>
                     <span>
-                      {editableFields.dueDate?.value
+                      {editableFields.dueDate.value
                         ? new Date(editableFields.dueDate.value).toLocaleDateString()
-                        : 'No due date set'
-                      }
+                        : 'No due date set'}
                     </span>
                     <Button variant="ghost" size="small" iconOnly>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -674,12 +662,12 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
 
               <div className={styles.field}>
                 <label className={styles.fieldLabel}>Estimated Hours</label>
-                {editableFields.estimatedHours?.isEditing ? (
+                {editableFields.estimatedHours.isEditing ? (
                   <div className={styles.editingField}>
                     <Input
                       type="number"
                       value={editableFields.estimatedHours.value}
-                      onChange={(e) => updateFieldValue('estimatedHours', e.target.value)}
+                      onChange={(e) => updateFieldValue('estimatedHours', e.target.value === '' ? '' : Number(e.target.value))}
                       error={errors.estimatedHours}
                       fullWidth
                       min="0"
@@ -707,10 +695,9 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
                 ) : (
                   <div className={styles.fieldValue} onClick={() => startEditing('estimatedHours')}>
                     <span>
-                      {editableFields.estimatedHours?.value
+                      {editableFields.estimatedHours.value !== '' && editableFields.estimatedHours.value !== undefined
                         ? `${editableFields.estimatedHours.value} hours`
-                        : 'Not estimated'
-                      }
+                        : 'Not estimated'}
                     </span>
                     <Button variant="ghost" size="small" iconOnly>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -726,15 +713,14 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
             {/* Tags Field */}
             <div className={styles.field}>
               <label className={styles.fieldLabel}>Tags</label>
-              {editableFields.tags?.isEditing ? (
+              {editableFields.tags.isEditing ? (
                 <div className={styles.editingField}>
                   <div className={styles.tagsContainer}>
                     {mockTags.map(tag => (
                       <button
                         key={tag}
                         type="button"
-                        className={`${styles.tagButton} ${editableFields.tags.value.includes(tag) ? styles.tagSelected : ''
-                          }`}
+                        className={`${styles.tagButton} ${editableFields.tags.value.includes(tag) ? styles.tagSelected : ''}`}
                         onClick={() => toggleTag(tag)}
                       >
                         {tag}
@@ -763,7 +749,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
               ) : (
                 <div className={styles.fieldValue} onClick={() => startEditing('tags')}>
                   <div className={styles.tagsDisplay}>
-                    {editableFields.tags?.value.length > 0 ? (
+                    {editableFields.tags.value.length > 0 ? (
                       editableFields.tags.value.map((tag: string) => (
                         <span key={tag} className={styles.tag}>
                           {tag}

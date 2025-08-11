@@ -91,9 +91,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
       // Apply typography variables
       root.style.setProperty('--font-family', theme.typography.fontFamily);
-      // Additional font families for headings and monospace
-      root.style.setProperty('--font-family-heading', 'Montserrat, ' + theme.typography.fontFamily);
-      root.style.setProperty('--font-family-mono', '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace');
+      // Headings and monospace families
+      root.style.setProperty('--font-family-heading', 'Space Grotesk, ' + theme.typography.fontFamily);
+      root.style.setProperty('--font-family-mono', 'DM Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace');
       Object.entries(theme.typography.fontSize).forEach(([key, value]) => {
         root.style.setProperty(`--font-size-${key}`, value);
       });
@@ -184,7 +184,7 @@ export { ThemeContext };
 // Ticket Context Implementation
 import type { Ticket, Board } from '../types';
 import { TicketStatus } from '../types';
-import { generateMockBoard, filterTickets } from '../data';
+import { generateMockBoard, generateEmptyBoard, filterTickets } from '../data';
 
 // Ticket Context Types
 interface TicketState {
@@ -224,6 +224,7 @@ interface TicketContextType {
     setFilters: (filters: Partial<TicketState['filters']>) => void;
     clearFilters: () => void;
     refreshBoard: () => void;
+    useMockData: () => void;
   };
 }
 
@@ -435,7 +436,7 @@ interface TicketProviderProps {
 }
 
 // Import enhanced storage utilities
-import { storage, saveBoard, loadBoard, saveFilters, loadFilters } from '../utils/storage';
+import { saveBoard, loadBoard, saveFilters, loadFilters } from '../utils/storage';
 
 // Ticket Provider Component
 export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
@@ -476,8 +477,8 @@ export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
           }));
           board = savedBoard;
         } else {
-          // Generate mock board if no saved data
-          board = generateMockBoard();
+          // Start with a clean board (no tickets) if no saved data
+          board = generateEmptyBoard();
         }
 
         dispatch({ type: 'LOAD_BOARD', payload: board });
@@ -490,8 +491,8 @@ export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
         console.error('Failed to load board data:', error);
         dispatch({ type: 'SET_ERROR', payload: 'Failed to load board data' });
         
-        // Fallback to mock data
-        const board = generateMockBoard();
+        // Fallback to an empty board to keep initial state clean
+        const board = generateEmptyBoard();
         dispatch({ type: 'LOAD_BOARD', payload: board });
       }
     };
@@ -549,6 +550,12 @@ export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
     dispatch({ type: 'LOAD_BOARD', payload: newBoard });
   };
 
+  // Explicit action to load mock data on demand
+  const useMockData = () => {
+    const mockBoard = generateMockBoard();
+    dispatch({ type: 'LOAD_BOARD', payload: mockBoard });
+  };
+
   const contextValue: TicketContextType = {
     state,
     actions: {
@@ -559,6 +566,7 @@ export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
       setFilters,
       clearFilters,
       refreshBoard,
+      useMockData,
     },
   };
 

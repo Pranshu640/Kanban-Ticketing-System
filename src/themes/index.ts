@@ -19,7 +19,7 @@ export const lightMode: Theme = {
     info: '#4682B4',
   },
   typography: {
-    fontFamily: 'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fontFamily: 'Atkinson Hyperlegible, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSize: {
       xs: '0.75rem',
       sm: '0.875rem',
@@ -66,7 +66,7 @@ export const darkMode: Theme = {
     info: '#06B6D4',
   },
   typography: {
-    fontFamily: 'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fontFamily: 'Atkinson Hyperlegible, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSize: {
       xs: '0.75rem',
       sm: '0.875rem',
@@ -113,7 +113,7 @@ export const brownieMode: Theme = {
     info: '#00FFFF',
   },
   typography: {
-    fontFamily: 'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fontFamily: 'Atkinson Hyperlegible, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSize: {
       xs: '0.875rem',
       sm: '1rem',

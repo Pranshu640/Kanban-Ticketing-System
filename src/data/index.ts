@@ -215,6 +215,14 @@ export const generateMockBoard = (): Board => {
   };
 };
 
+// Generate an empty board (no tickets), preserving default columns
+export const generateEmptyBoard = (): Board => ({
+  id: 'main-board',
+  name: 'Project Board',
+  columns: defaultColumns,
+  tickets: [],
+});
+
 // Utility functions for ticket filtering and searching
 export const filterTickets = (
   tickets: Ticket[],

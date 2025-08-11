@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { MultiBackend } from 'react-dnd-multi-backend';
-import { ThemeProvider, TicketProvider, ToastProvider } from './contexts';
+import { ThemeProvider, TicketProvider, ToastProvider, useTickets } from './contexts';
 import { ThemeSelector, Button, ErrorBoundary, ResponsiveTestPanel, AccessibilityChecker, MotionWrapper, DataManager } from './components/ui';
 import MobileErrorBoundary from './components/ui/MobileErrorBoundary';
 import { TicketModal } from './components/ticket';
@@ -17,6 +17,14 @@ function App() {
   const [isTestPanelOpen, setIsTestPanelOpen] = useState(false);
   const [isA11yCheckerOpen, setIsA11yCheckerOpen] = useState(false);
   const [isDataManagerOpen, setIsDataManagerOpen] = useState(false);
+
+  const ticketsCtx = (() => {
+    try {
+      return useTickets();
+    } catch {
+      return null;
+    }
+  })();
 
   const handleCreateTicket = () => {
     setIsTicketModalOpen(true);
@@ -135,6 +143,14 @@ function App() {
                     aria-label="Create new ticket"
                   >
                     Create Ticket
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => ticketsCtx?.actions.useMockData()}
+                    aria-label="Load mock data"
+                    title="Populate board with mock tickets"
+                  >
+                    Use Mock Data
                   </Button>
                   {import.meta.env.DEV && (
                     <>

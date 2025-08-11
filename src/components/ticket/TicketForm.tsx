@@ -57,66 +57,49 @@ const TicketForm: React.FC<TicketFormProps> = ({
   // Validation rules
   const validateField = useCallback((name: string, value: string | number | string[] | undefined): string | undefined => {
     switch (name) {
-      case 'title':
-        if (!value || value.trim().length === 0) {
-          return 'Title is required';
-        }
-        if (value.trim().length < 3) {
-          return 'Title must be at least 3 characters long';
-        }
-        if (value.trim().length > 100) {
-          return 'Title must be less than 100 characters';
-        }
+      case 'title': {
+        const v = (value ?? '') as string;
+        if (!v || v.trim().length === 0) return 'Title is required';
+        if (v.trim().length < 3) return 'Title must be at least 3 characters long';
+        if (v.trim().length > 100) return 'Title must be less than 100 characters';
         break;
-
-      case 'description':
-        if (!value || value.trim().length === 0) {
-          return 'Description is required';
-        }
-        if (value.trim().length < 10) {
-          return 'Description must be at least 10 characters long';
-        }
-        if (value.trim().length > 1000) {
-          return 'Description must be less than 1000 characters';
-        }
+      }
+      case 'description': {
+        const v = (value ?? '') as string;
+        if (!v || v.trim().length === 0) return 'Description is required';
+        if (v.trim().length < 10) return 'Description must be at least 10 characters long';
+        if (v.trim().length > 1000) return 'Description must be less than 1000 characters';
         break;
-
-      case 'priority':
-        if (!value || !Object.values(Priority).includes(value)) {
-          return 'Please select a valid priority';
-        }
+      }
+      case 'priority': {
+        const v = value as Priority | undefined;
+        if (!v || !Object.values(Priority).includes(v)) return 'Please select a valid priority';
         break;
-
-      case 'assignee':
-        if (!value || value.trim().length === 0) {
-          return 'Assignee is required';
-        }
+      }
+      case 'assignee': {
+        const v = (value ?? '') as string;
+        if (!v || v.trim().length === 0) return 'Assignee is required';
         break;
-
-      case 'dueDate':
-        if (value) {
-          const selectedDate = new Date(value);
+      }
+      case 'dueDate': {
+        const v = value as string | undefined;
+        if (v) {
+          const selectedDate = new Date(v);
           const today = new Date();
           today.setHours(0, 0, 0, 0);
-          
-          if (selectedDate < today) {
-            return 'Due date cannot be in the past';
-          }
+          if (selectedDate < today) return 'Due date cannot be in the past';
         }
         break;
-
-      case 'estimatedHours':
-        if (value !== undefined && value !== '') {
-          const hours = Number(value);
-          if (isNaN(hours) || hours < 0) {
-            return 'Estimated hours must be a positive number';
-          }
-          if (hours > 1000) {
-            return 'Estimated hours must be less than 1000';
-          }
+      }
+      case 'estimatedHours': {
+        const v = value as number | undefined;
+        if (v !== undefined && v !== null) {
+          const hours = Number(v);
+          if (isNaN(hours) || hours < 0) return 'Estimated hours must be a positive number';
+          if (hours > 1000) return 'Estimated hours must be less than 1000';
         }
         break;
-
+      }
       default:
         break;
     }
