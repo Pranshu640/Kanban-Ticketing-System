@@ -67,33 +67,21 @@
   }
 }
 
-/* Mobile filter overlay */
+/* Mobile filter: render inline instead of full-screen overlay to avoid covering the app */
 @media (max-width: 768px) {
   .filterSection .filterPanel:not(.collapsed) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--color-background);
-    overflow-y: auto;
-    padding: var(--spacing-md);
-    box-shadow: none;
-    border-radius: 0;
+    position: static;
+    width: 100%;
+    height: auto;
+    background-color: var(--color-surface);
+    overflow: visible;
+    padding: 0;
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius-md);
   }
   
   .filterSection .filterPanel:not(.collapsed)::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: -1;
+    content: none;
   }
 }
 

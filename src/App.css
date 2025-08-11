@@ -109,7 +109,7 @@
   .app-header {
     padding: var(--spacing-md);
   }
-  
+
   .app-main {
     padding: var(--spacing-lg);
   }
@@ -121,7 +121,7 @@
     overflow-x: hidden;
     background-color: var(--color-background);
   }
-  
+
   .app-header {
     flex-direction: column;
     gap: var(--spacing-md);
@@ -148,11 +148,11 @@
   .demo-card {
     max-width: 100%;
   }
-  
+
   .welcome-message h2 {
     font-size: var(--font-size-md);
   }
-  
+
   .welcome-message p {
     font-size: var(--font-size-sm);
   }
@@ -162,41 +162,41 @@
   .app {
     background-color: var(--color-background);
   }
-  
+
   .app-header {
     padding: var(--spacing-sm);
     background-color: var(--color-surface);
   }
-  
+
   .app-header h1 {
     font-size: var(--font-size-lg);
     color: var(--color-text);
   }
-  
+
   .header-actions {
     flex-direction: column;
     align-items: center;
     width: 100%;
   }
-  
+
   .app-main {
     padding: var(--spacing-xs);
     background-color: var(--color-background);
     min-height: calc(100vh - 140px);
   }
-  
+
   .welcome-message {
     margin-bottom: var(--spacing-lg);
   }
-  
+
   .demo-card {
     padding: var(--spacing-md);
   }
-  
+
   .demo-card h3 {
     font-size: var(--font-size-md);
   }
-  
+
   .demo-card p {
     font-size: var(--font-size-xs);
   }
@@ -209,21 +209,21 @@
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
   }
-  
+
   .demo-button {
     /* Touch-friendly button */
     min-height: 44px;
     padding: var(--spacing-md) var(--spacing-lg);
     font-size: var(--font-size-md);
   }
-  
+
   .demo-button:hover {
     /* Remove hover effects on touch */
     background-color: var(--color-primary);
     transform: none;
     box-shadow: var(--shadow-sm);
   }
-  
+
   .demo-button:active {
     /* Add touch feedback */
     transform: scale(0.98);

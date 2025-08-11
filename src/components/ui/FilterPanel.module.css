@@ -215,120 +215,39 @@
   }
 }
 
-/* Tablet adjustments */
-@media (max-width: 768px) and (min-width: 481px) {
+/* Remove full-screen overlay and backdrop on tablet/mobile */
+@media (max-width: 768px) {
   .filterPanel:not(.collapsed) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    border-radius: 0;
-    max-height: 100vh;
-    overflow-y: auto;
-    padding: var(--spacing-lg);
-    background-color: var(--color-background);
-  }
-  
-  .filterPanel.collapsed {
     position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    z-index: auto;
+    border-radius: var(--border-radius-md);
     max-height: none;
     overflow: visible;
+    padding: var(--spacing-sm);
     background-color: var(--color-surface);
-  }
-  
-  .filterHeader {
-    position: sticky;
-    top: 0;
-    background-color: var(--color-background);
-    z-index: 1;
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 2px solid var(--color-border);
-  }
-  
-  .filterContent {
-    padding-bottom: var(--spacing-xl);
-  }
-  
-  .toggleButton {
-    min-height: 44px; /* Touch-friendly */
-    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-border);
   }
 }
 
 /* Mobile adjustments */
 @media (max-width: 480px) {
   .filterPanel:not(.collapsed) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    border-radius: 0;
-    max-height: 100vh;
-    overflow-y: auto;
-    padding: var(--spacing-md);
-    background-color: var(--color-background);
-    border: none;
-  }
-  
-  .filterPanel.collapsed {
     position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    z-index: auto;
+    border-radius: var(--border-radius-md);
     max-height: none;
     overflow: visible;
+    padding: var(--spacing-sm);
     background-color: var(--color-surface);
-    padding: 0;
-    border: none;
-    box-shadow: none;
-  }
-  
-  .filterHeader {
-    position: sticky;
-    top: 0;
-    background-color: var(--color-background);
-    z-index: 1;
-    margin-bottom: var(--spacing-sm);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 2px solid var(--color-border);
-  }
-  
-  .filterTitle {
-    font-size: var(--font-size-lg);
-  }
-  
-  .filterContent {
-    padding-bottom: var(--spacing-xl);
-    gap: var(--spacing-lg);
-  }
-  
-  .filterGroup {
-    gap: var(--spacing-sm);
-  }
-  
-  .toggleButton {
-    min-height: 44px; /* Touch-friendly */
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-md);
-  }
-  
-  .checkboxLabel {
-    min-height: 44px; /* Touch-friendly */
-    padding: var(--spacing-sm);
-  }
-  
-  .checkboxIndicator {
-    width: 24px;
-    height: 24px;
-  }
-  
-  .clearButton,
-  .collapseButton,
-  .advancedToggleButton {
-    min-height: 44px; /* Touch-friendly */
-    padding: var(--spacing-sm);
+    border: 1px solid var(--color-border);
   }
 }
 
@@ -358,17 +277,9 @@
   }
 }
 
-/* Backdrop for mobile overlay */
+/* Backdrop removed to prevent grey screen */
 @media (max-width: 768px) {
   .filterPanel:not(.collapsed)::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: -1;
-    backdrop-filter: blur(2px);
+    content: none;
   }
 }

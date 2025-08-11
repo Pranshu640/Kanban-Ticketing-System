@@ -5,8 +5,10 @@ import { TouchBackend } from 'react-dnd-touch-backend';
 import { MultiBackend } from 'react-dnd-multi-backend';
 import { ThemeProvider, TicketProvider, ToastProvider } from './contexts';
 import { ThemeSelector, Button, ErrorBoundary, ResponsiveTestPanel, AccessibilityChecker, MotionWrapper } from './components/ui';
+import MobileErrorBoundary from './components/ui/MobileErrorBoundary';
 import { TicketModal } from './components/ticket';
 import BoardDemo from './components/BoardDemo';
+import { shouldUseTouchBackend } from './utils';
 import './App.css';
 import './mobile-fix.css';
 
@@ -63,9 +65,12 @@ function App() {
         backend: TouchBackend,
         options: {
           enableMouseEvents: true,
-          delayTouchStart: 200,
+          delayTouchStart: 100,
           delayMouseStart: 0,
-          touchSlop: 16,
+          touchSlop: 8,
+          ignoreContextMenu: true,
+          enableHoverOutsideTarget: false,
+          enableKeyboardEvents: false,
         },
         preview: true,
         transition: {
@@ -78,12 +83,40 @@ function App() {
     ]
   };
 
+  // Detect if we should use touch backend
+  const useTouchBackend = shouldUseTouchBackend();
+  
+  // Use simpler backend on mobile to prevent crashes
+  const dndBackend = useTouchBackend ? TouchBackend : MultiBackend;
+  const dndOptions = useTouchBackend ? {
+    enableMouseEvents: true,
+    delayTouchStart: 50,
+    delayMouseStart: 0,
+    touchSlop: 5,
+    ignoreContextMenu: true,
+  } : backendOptions;
+
+  // Fallback component when DnD fails
+  const DnDWrapper = ({ children }: { children: React.ReactNode }) => {
+    try {
+      return (
+        <DndProvider backend={dndBackend} options={dndOptions}>
+          {children}
+        </DndProvider>
+      );
+    } catch (error) {
+      console.error('DnD Provider failed:', error);
+      return <>{children}</>; 
+    }
+  };
+
   return (
-    <ErrorBoundary>
-      <DndProvider backend={MultiBackend} options={backendOptions}>
-        <ThemeProvider>
-          <ToastProvider>
-            <TicketProvider>
+    <MobileErrorBoundary>
+      <ErrorBoundary>
+        <DnDWrapper>
+          <ThemeProvider>
+            <ToastProvider>
+              <TicketProvider>
             <div className="app">
               <header className="app-header">
                 <h1>Kanban Ticketing System</h1>
@@ -151,11 +184,12 @@ function App() {
                 onClose={handleCloseA11yChecker}
               />
             </div>
-          </TicketProvider>
-        </ToastProvider>
-      </ThemeProvider>
-    </DndProvider>
-    </ErrorBoundary>
+              </TicketProvider>
+            </ToastProvider>
+          </ThemeProvider>
+        </DnDWrapper>
+      </ErrorBoundary>
+    </MobileErrorBoundary>
   );
 }
 

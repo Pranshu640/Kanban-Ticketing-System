@@ -287,3 +287,6 @@ export const uniqueBy = <T, K>(array: T[], getKey: (item: T) => K): T[] => {
 
 // Export animation utilities
 export * from './animations';
+
+// Export mobile utilities
+export * from './mobile';
