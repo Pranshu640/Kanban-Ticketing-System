@@ -3,6 +3,37 @@ import { storage, createBackup, restoreBackup } from '../../utils/storage';
 import Button from './Button';
 import Modal from './Modal';
 import styles from './DataManager.module.css';
+import { useTickets } from '../../contexts';
+
+function downloadFile(filename: string, content: string, mimeType: string) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function toCSV(rows: Array<Record<string, any>>, headers: string[]): string {
+  const escapeCSV = (value: any) => {
+    if (value === null || value === undefined) return '';
+    const str = String(value);
+    const needsQuotes = /[",\n\r]/.test(str);
+    const escaped = str.replace(/"/g, '""');
+    return needsQuotes ? `"${escaped}"` : escaped;
+  };
+
+  const lines: string[] = [];
+  lines.push(headers.map(h => escapeCSV(h)).join(','));
+  for (const row of rows) {
+    lines.push(headers.map(h => escapeCSV(row[h])).join(','));
+  }
+  // Prepend UTF-8 BOM for Excel compatibility
+  return '\uFEFF' + lines.join('\r\n');
+}
 
 interface DataManagerProps {
   isOpen: boolean;
@@ -12,9 +43,47 @@ interface DataManagerProps {
 const DataManager: React.FC<DataManagerProps> = ({ isOpen, onClose }) => {
   const [isRestoring, setIsRestoring] = useState(false);
   const [restoreStatus, setRestoreStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const { state } = useTickets();
 
   const handleExportData = () => {
     createBackup();
+  };
+
+  const handleExportTicketsCSV = () => {
+    const tickets = state.board.tickets;
+    const headers = [
+      'ID',
+      'Title',
+      'Description',
+      'Status',
+      'Priority',
+      'Assignee',
+      'Created At',
+      'Updated At',
+      'Due Date',
+      'Completed At',
+      'Estimated Hours',
+      'Tags',
+    ];
+
+    const rows = tickets.map(t => ({
+      'ID': t.id,
+      'Title': t.title,
+      'Description': t.description ?? '',
+      'Status': t.status,
+      'Priority': t.priority,
+      'Assignee': t.assignee ?? '',
+      'Created At': t.createdAt ? new Date(t.createdAt).toISOString() : '',
+      'Updated At': t.updatedAt ? new Date(t.updatedAt).toISOString() : '',
+      'Due Date': t.dueDate ? new Date(t.dueDate).toISOString() : '',
+      'Completed At': t.completedAt ? new Date(t.completedAt).toISOString() : '',
+      'Estimated Hours': t.estimatedHours ?? '',
+      'Tags': Array.isArray(t.tags) ? t.tags.join('; ') : '',
+    }));
+
+    const csv = toCSV(rows, headers);
+    const date = new Date().toISOString().split('T')[0];
+    downloadFile(`tickets-${date}.csv`, csv, 'text/csv;charset=utf-8;');
   };
 
   const handleImportData = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,10 +152,22 @@ const DataManager: React.FC<DataManagerProps> = ({ isOpen, onClose }) => {
         <div className={styles.section}>
           <h3>Backup & Restore</h3>
           <p className={styles.description}>
-            Export your data to a JSON file for backup, or import previously exported data.
+            Export your tickets to CSV for spreadsheets, or export/import a full JSON backup.
           </p>
           
           <div className={styles.actions}>
+            <Button
+              variant="primary"
+              onClick={handleExportTicketsCSV}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 3h18v4H3z"></path>
+                <path d="M3 7h18v14H3z"></path>
+                <path d="M7 11h10"></path>
+                <path d="M7 15h10"></path>
+              </svg>
+              Export Tickets (CSV)
+            </Button>
             <Button
               variant="primary"
               onClick={handleExportData}
@@ -96,7 +177,7 @@ const DataManager: React.FC<DataManagerProps> = ({ isOpen, onClose }) => {
                 <polyline points="7,10 12,15 17,10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
               </svg>
-              Export Data
+              Export Full Backup (JSON)
             </Button>
 
             <div className={styles.importSection}>
@@ -115,7 +196,7 @@ const DataManager: React.FC<DataManagerProps> = ({ isOpen, onClose }) => {
                     <polyline points="17,8 12,3 7,8"></polyline>
                     <line x1="12" y1="3" x2="12" y2="15"></line>
                   </svg>
-                  {isRestoring ? 'Importing...' : 'Import Data'}
+                  {isRestoring ? 'Importing...' : 'Import Backup (JSON)'}
                 </span>
               </label>
             </div>
