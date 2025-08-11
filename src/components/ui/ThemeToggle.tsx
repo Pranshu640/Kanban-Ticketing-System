@@ -20,7 +20,6 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
 
   const toggleTheme = () => {
     if (isBrownieMode) {
-      // Exit brownie mode back to light
       setTheme(lightMode);
     } else {
       setTheme(isDarkMode ? lightMode : darkMode);
@@ -31,11 +30,9 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
     setBrownieClicks(prev => prev + 1);
     
     if (brownieClicks >= 4) {
-      // Activate brownie mode after 5 clicks
       setTheme(brownieMode);
       setBrownieClicks(0);
     } else if (brownieClicks === 2) {
-      // Show brownie button after 3 clicks
       setShowBrownieButton(true);
     }
   };

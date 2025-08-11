@@ -46,8 +46,8 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-// Local Storage Key
-const THEME_STORAGE_KEY = 'kanban-theme-preference';
+// Import theme storage utilities
+import { saveTheme, loadTheme } from '../utils/storage';
 
 // Theme Provider Component
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
@@ -56,11 +56,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     isLoading: true,
   });
 
-  // Load theme from localStorage on mount
+  // Load theme from enhanced storage on mount
   useEffect(() => {
     const loadSavedTheme = () => {
       try {
-        const savedThemeId = localStorage.getItem(THEME_STORAGE_KEY);
+        const savedThemeId = loadTheme();
         if (savedThemeId) {
           const savedTheme = getThemeById(savedThemeId);
           if (savedTheme) {
@@ -69,7 +69,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
           }
         }
       } catch (error) {
-        console.warn('Failed to load theme from localStorage:', error);
+        console.warn('Failed to load theme from storage:', error);
       }
       
       // Fallback to default theme
@@ -91,6 +91,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
       // Apply typography variables
       root.style.setProperty('--font-family', theme.typography.fontFamily);
+      // Additional font families for headings and monospace
+      root.style.setProperty('--font-family-heading', 'Montserrat, ' + theme.typography.fontFamily);
+      root.style.setProperty('--font-family-mono', '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace');
       Object.entries(theme.typography.fontSize).forEach(([key, value]) => {
         root.style.setProperty(`--font-size-${key}`, value);
       });
@@ -126,11 +129,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     // Add theme loading class for smooth transition
     document.documentElement.classList.add('theme-loading');
     
-    // Save to localStorage
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, theme.id);
-    } catch (error) {
-      console.warn('Failed to save theme to localStorage:', error);
+    // Save to enhanced storage
+    const success = saveTheme(theme.id);
+    if (!success) {
+      console.warn('Failed to save theme to storage');
     }
 
     // Smooth transition with proper timing
@@ -432,9 +434,8 @@ interface TicketProviderProps {
   children: ReactNode;
 }
 
-// Local Storage Keys
-const BOARD_STORAGE_KEY = 'kanban-board-data';
-const FILTERS_STORAGE_KEY = 'kanban-filters';
+// Import enhanced storage utilities
+import { storage, saveBoard, loadBoard, saveFilters, loadFilters } from '../utils/storage';
 
 // Ticket Provider Component
 export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
@@ -459,22 +460,21 @@ export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
       try {
         dispatch({ type: 'SET_LOADING', payload: true });
 
-        // Try to load from localStorage first
-        const savedBoard = localStorage.getItem(BOARD_STORAGE_KEY);
-        const savedFilters = localStorage.getItem(FILTERS_STORAGE_KEY);
+        // Try to load from enhanced storage first
+        const savedBoard = loadBoard();
+        const savedFilters = loadFilters();
 
         let board: Board;
         if (savedBoard) {
-          const parsedBoard = JSON.parse(savedBoard);
           // Convert date strings back to Date objects
-          parsedBoard.tickets = parsedBoard.tickets.map((ticket: any) => ({
+          savedBoard.tickets = savedBoard.tickets.map((ticket: any) => ({
             ...ticket,
             createdAt: new Date(ticket.createdAt),
             updatedAt: new Date(ticket.updatedAt),
             dueDate: ticket.dueDate ? new Date(ticket.dueDate) : undefined,
             completedAt: ticket.completedAt ? new Date(ticket.completedAt) : undefined,
           }));
-          board = parsedBoard;
+          board = savedBoard;
         } else {
           // Generate mock board if no saved data
           board = generateMockBoard();
@@ -484,8 +484,7 @@ export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
 
         // Load saved filters
         if (savedFilters) {
-          const parsedFilters = JSON.parse(savedFilters);
-          dispatch({ type: 'SET_FILTERS', payload: parsedFilters });
+          dispatch({ type: 'SET_FILTERS', payload: savedFilters });
         }
       } catch (error) {
         console.error('Failed to load board data:', error);
@@ -500,24 +499,22 @@ export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
     loadBoardData();
   }, []);
 
-  // Save board data to localStorage whenever it changes
+  // Save board data to enhanced storage whenever it changes
   useEffect(() => {
     if (!state.isLoading && state.board.tickets.length > 0) {
-      try {
-        localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(state.board));
-      } catch (error) {
-        console.warn('Failed to save board data to localStorage:', error);
+      const success = saveBoard(state.board);
+      if (!success) {
+        console.warn('Failed to save board data to storage');
       }
     }
   }, [state.board, state.isLoading]);
 
-  // Save filters to localStorage whenever they change
+  // Save filters to enhanced storage whenever they change
   useEffect(() => {
     if (!state.isLoading) {
-      try {
-        localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(state.filters));
-      } catch (error) {
-        console.warn('Failed to save filters to localStorage:', error);
+      const success = saveFilters(state.filters);
+      if (!success) {
+        console.warn('Failed to save filters to storage');
       }
     }
   }, [state.filters, state.isLoading]);

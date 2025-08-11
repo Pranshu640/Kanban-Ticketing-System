@@ -10,7 +10,6 @@ export type TicketStatus = typeof TicketStatus[keyof typeof TicketStatus];
 
 export const Priority = {
   LOW: 'low',
-  MEDIUM: 'medium',
   HIGH: 'high',
   URGENT: 'urgent'
 } as const;

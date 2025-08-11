@@ -84,10 +84,6 @@
   color: var(--color-warning);
 }
 
-.priorityLabel.medium {
-  color: var(--color-info);
-}
-
 .priorityLabel.low {
   color: var(--color-text-secondary);
 }

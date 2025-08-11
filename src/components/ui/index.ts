@@ -25,6 +25,7 @@ export { default as ResponsiveTestPanel } from './ResponsiveTestPanel';
 export { default as AccessibilityChecker } from './AccessibilityChecker';
 export { default as MotionWrapper } from './MotionWrapper';
 export { default as MobileErrorBoundary } from './MobileErrorBoundary';
+export { default as DataManager } from './DataManager';
 
 // Export types
 export type { ButtonProps } from './Button';

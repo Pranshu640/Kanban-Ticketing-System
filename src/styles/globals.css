@@ -66,10 +66,6 @@ body {
   --priority-color: #6b7280;
   --priority-bg: #f9fafb;
 }
-.priority-medium { 
-  --priority-color: #2563eb;
-  --priority-bg: #eff6ff;
-}
 .priority-high { 
   --priority-color: #ea580c;
   --priority-bg: #fff7ed;

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Board } from './board';
 import { TicketDetailModal } from './ticket';
-import { ResponsiveLayout, useBreakpoint } from './ui';
 import type { Ticket } from '../types';
 import { useTickets, useToast } from '../contexts';
 import styles from './BoardDemo.module.css';
@@ -9,7 +8,6 @@ import styles from './BoardDemo.module.css';
 const BoardDemoContent: React.FC = () => {
   const { actions, state } = useTickets();
   const { showToast } = useToast();
-  const breakpoint = useBreakpoint();
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
@@ -39,13 +37,11 @@ const BoardDemoContent: React.FC = () => {
   };
 
   return (
-    <ResponsiveLayout>
+    <>
       <div className={styles.demo}>
         <div className={styles.demoHeader}>
           <h1>Kanban Board Demo</h1>
-          <p className={breakpoint.isMobile ? styles.mobileSubtitle : ''}>
-            Interactive ticket management system with drag-and-drop functionality
-          </p>
+          <p>Interactive ticket management system with drag-and-drop functionality</p>
         </div>
         
         <div className={styles.boardContainer}>
@@ -63,12 +59,8 @@ const BoardDemoContent: React.FC = () => {
         ticket={selectedTicket}
         onDelete={handleTicketDelete}
       />
-    </ResponsiveLayout>
+    </>
   );
 };
 
-const BoardDemo: React.FC = () => {
-  return <BoardDemoContent />;
-};
-
-export default BoardDemo;
+export default BoardDemoContent;

@@ -66,6 +66,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       className={`${styles.confirmationModal} ${styles[variant]}`}
       closeOnOverlayClick={!isLoading}
       closeOnEscape={!isLoading}
+      showCloseButton={true}
     >
       <div className={styles.content}>
         <div className={`${styles.icon} ${styles[variant]}`}>

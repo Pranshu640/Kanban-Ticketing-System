@@ -44,7 +44,7 @@ const TicketForm: React.FC<TicketFormProps> = ({
   const [formData, setFormData] = useState<TicketFormData>({
     title: initialData.title || '',
     description: initialData.description || '',
-    priority: initialData.priority || Priority.MEDIUM,
+    priority: initialData.priority || Priority.LOW,
     assignee: initialData.assignee || '',
     dueDate: initialData.dueDate || '',
     tags: initialData.tags || [],
@@ -55,7 +55,7 @@ const TicketForm: React.FC<TicketFormProps> = ({
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   // Validation rules
-  const validateField = useCallback((name: string, value: any): string | undefined => {
+  const validateField = useCallback((name: string, value: string | number | string[] | undefined): string | undefined => {
     switch (name) {
       case 'title':
         if (!value || value.trim().length === 0) {
@@ -138,7 +138,7 @@ const TicketForm: React.FC<TicketFormProps> = ({
   }, [formData, validateField]);
 
   // Handle field changes
-  const handleFieldChange = useCallback((name: string, value: any) => {
+  const handleFieldChange = useCallback((name: string, value: string | number | string[] | undefined) => {
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -200,7 +200,6 @@ const TicketForm: React.FC<TicketFormProps> = ({
   // Priority options
   const priorityOptions = [
     { value: Priority.LOW, label: 'Low' },
-    { value: Priority.MEDIUM, label: 'Medium' },
     { value: Priority.HIGH, label: 'High' },
     { value: Priority.URGENT, label: 'Urgent' },
   ];

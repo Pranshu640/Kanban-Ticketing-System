@@ -1,6 +1,6 @@
 import type { Theme } from '../types';
 
-// Main theme with light/dark modes
+// Light mode (Off-white & brown palette)
 export const lightMode: Theme = {
   id: 'light',
   name: 'Light Mode',
@@ -19,13 +19,13 @@ export const lightMode: Theme = {
     info: '#4682B4',
   },
   typography: {
-    fontFamily: '"IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    fontFamily: 'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSize: {
       xs: '0.75rem',
       sm: '0.875rem',
       md: '1rem',
       lg: '1.125rem',
-      xl: '1.375rem',
+      xl: '1.25rem',
     },
   },
   spacing: {
@@ -41,12 +41,13 @@ export const lightMode: Theme = {
     lg: '0.75rem',
   },
   shadows: {
-    sm: '0 1px 3px 0 rgba(0, 0, 0, 0.08)',
-    md: '0 4px 12px 0 rgba(0, 0, 0, 0.08)',
-    lg: '0 8px 25px 0 rgba(0, 0, 0, 0.12)',
+    sm: '0 1px 3px 0 rgba(47, 47, 47, 0.08)',
+    md: '0 4px 12px 0 rgba(47, 47, 47, 0.08)',
+    lg: '0 8px 25px 0 rgba(47, 47, 47, 0.12)',
   },
 };
 
+// Dark mode (Brown-tan contrast palette)
 export const darkMode: Theme = {
   id: 'dark',
   name: 'Dark Mode',
@@ -65,13 +66,13 @@ export const darkMode: Theme = {
     info: '#06B6D4',
   },
   typography: {
-    fontFamily: '"IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    fontFamily: 'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSize: {
       xs: '0.75rem',
       sm: '0.875rem',
       md: '1rem',
       lg: '1.125rem',
-      xl: '1.375rem',
+      xl: '1.25rem',
     },
   },
   spacing: {
@@ -93,9 +94,7 @@ export const darkMode: Theme = {
   },
 };
 
-
-
-// Fun "Brownie" mode (easter egg)
+// Brownie Mode (retro fun mode)
 export const brownieMode: Theme = {
   id: 'brownie',
   name: 'Brownie Mode',
@@ -114,7 +113,7 @@ export const brownieMode: Theme = {
     info: '#00FFFF',
   },
   typography: {
-    fontFamily: '"Source Code Pro", "SF Mono", Monaco, "Cascadia Code", monospace',
+    fontFamily: 'Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSize: {
       xs: '0.875rem',
       sm: '1rem',
@@ -142,21 +141,12 @@ export const brownieMode: Theme = {
   },
 };
 
-// Available themes (light/dark + hidden brownie mode)
-export const availableThemes: Theme[] = [
-  lightMode,
-  darkMode,
-  brownieMode,
-];
+// Only export these three as selectable themes
+export const availableThemes: Theme[] = [lightMode, darkMode, brownieMode];
 
 // Default theme
 export const defaultTheme = lightMode;
 
-// Theme utilities
-export const getThemeById = (id: string): Theme | undefined => {
-  return availableThemes.find(theme => theme.id === id);
-};
-
-export const getThemeByName = (name: string): Theme | undefined => {
-  return availableThemes.find(theme => theme.name === name);
-};
+// Helpers
+export const getThemeById = (id: string): Theme | undefined => availableThemes.find(t => t.id === id);
+export const getThemeByName = (name: string): Theme | undefined => availableThemes.find(t => t.name === name);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
@@ -25,16 +25,16 @@ interface TicketHistory {
   timestamp: Date;
   action: 'created' | 'updated' | 'moved' | 'deleted';
   field?: string;
-  oldValue?: any;
-  newValue?: any;
+  oldValue?: string | number | string[] | Date | undefined;
+  newValue?: string | number | string[] | Date | undefined;
   description: string;
 }
 
 interface EditableField {
   field: keyof Ticket;
   isEditing: boolean;
-  value: any;
-  originalValue: any;
+  value: string | number | string[];
+  originalValue: string | number | string[];
 }
 
 const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
@@ -51,6 +51,61 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [history, setHistory] = useState<TicketHistory[]>([]);
+
+  // Get status label
+  const getStatusLabel = useCallback((status: string) => {
+    switch (status) {
+      case TicketStatus.TODO:
+        return 'To Do';
+      case TicketStatus.IN_PROGRESS:
+        return 'In Progress';
+      case TicketStatus.IN_REVIEW:
+        return 'In Review';
+      case TicketStatus.DONE:
+        return 'Done';
+      default:
+        return status;
+    }
+  }, []);
+
+  // Generate mock history for demonstration
+  const generateTicketHistory = useCallback((ticket: Ticket) => {
+    const mockHistory: TicketHistory[] = [
+      {
+        id: '1',
+        timestamp: ticket.createdAt,
+        action: 'created',
+        description: `Ticket created by ${ticket.assignee}`,
+      },
+    ];
+
+    // Add some mock updates
+    if (ticket.updatedAt > ticket.createdAt) {
+      mockHistory.push({
+        id: '2',
+        timestamp: ticket.updatedAt,
+        action: 'updated',
+        field: 'description',
+        description: 'Description updated',
+      });
+    }
+
+    // Add status changes based on current status
+    if (ticket.status !== TicketStatus.TODO) {
+      const statusDate = new Date(ticket.createdAt.getTime() + 24 * 60 * 60 * 1000);
+      mockHistory.push({
+        id: '3',
+        timestamp: statusDate,
+        action: 'moved',
+        field: 'status',
+        oldValue: TicketStatus.TODO,
+        newValue: ticket.status,
+        description: `Status changed from To Do to ${getStatusLabel(ticket.status)}`,
+      });
+    }
+
+    setHistory(mockHistory.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()));
+  }, [getStatusLabel]);
 
   // Initialize editable fields when ticket changes
   useEffect(() => {
@@ -104,65 +159,10 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
       // Generate mock history for the ticket
       generateTicketHistory(ticket);
     }
-  }, [ticket]);
-
-  // Generate mock history for demonstration
-  const generateTicketHistory = (ticket: Ticket) => {
-    const mockHistory: TicketHistory[] = [
-      {
-        id: '1',
-        timestamp: ticket.createdAt,
-        action: 'created',
-        description: `Ticket created by ${ticket.assignee}`,
-      },
-    ];
-
-    // Add some mock updates
-    if (ticket.updatedAt > ticket.createdAt) {
-      mockHistory.push({
-        id: '2',
-        timestamp: ticket.updatedAt,
-        action: 'updated',
-        field: 'description',
-        description: 'Description updated',
-      });
-    }
-
-    // Add status changes based on current status
-    if (ticket.status !== TicketStatus.TODO) {
-      const statusDate = new Date(ticket.createdAt.getTime() + 24 * 60 * 60 * 1000);
-      mockHistory.push({
-        id: '3',
-        timestamp: statusDate,
-        action: 'moved',
-        field: 'status',
-        oldValue: TicketStatus.TODO,
-        newValue: ticket.status,
-        description: `Status changed from To Do to ${getStatusLabel(ticket.status)}`,
-      });
-    }
-
-    setHistory(mockHistory.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()));
-  };
-
-  // Get status label
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case TicketStatus.TODO:
-        return 'To Do';
-      case TicketStatus.IN_PROGRESS:
-        return 'In Progress';
-      case TicketStatus.IN_REVIEW:
-        return 'In Review';
-      case TicketStatus.DONE:
-        return 'Done';
-      default:
-        return status;
-    }
-  };
+  }, [ticket, generateTicketHistory]);
 
   // Validation functions
-  const validateField = (field: string, value: any): string | undefined => {
+  const validateField = (field: string, value: string | number | string[]): string | undefined => {
     switch (field) {
       case 'title':
         if (!value || value.trim().length === 0) {
@@ -338,7 +338,7 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
   };
 
   // Update field value
-  const updateFieldValue = (fieldName: string, value: any) => {
+  const updateFieldValue = (fieldName: string, value: string | number | string[]) => {
     setEditableFields(prev => ({
       ...prev,
       [fieldName]: {
@@ -387,7 +387,6 @@ const TicketDetailModal: React.FC<TicketDetailModalProps> = ({
   // Priority options
   const priorityOptions = [
     { value: PriorityEnum.LOW, label: 'Low' },
-    { value: PriorityEnum.MEDIUM, label: 'Medium' },
     { value: PriorityEnum.HIGH, label: 'High' },
     { value: PriorityEnum.URGENT, label: 'Urgent' },
   ];

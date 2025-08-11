@@ -107,24 +107,6 @@ const Ticket: React.FC<TicketProps> = ({
             <line x1="12" y1="17" x2="12.01" y2="17"></line>
           </svg>
         );
-      case Priority.MEDIUM:
-        return (
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={styles.priorityIcon}
-          >
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="9" y1="9" x2="15" y2="15"></line>
-            <line x1="15" y1="9" x2="9" y2="15"></line>
-          </svg>
-        );
       case Priority.LOW:
         return (
           <svg
@@ -287,7 +269,6 @@ aria-label={`Priority: ${ticket.priority.charAt(0).toUpperCase() + ticket.priori
 {(() => {
               const priorityLabels = {
                 'low': 'Low',
-                'medium': 'Med',
                 'high': 'High',
                 'urgent': 'Urgent'
               };

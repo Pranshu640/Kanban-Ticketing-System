@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { MultiBackend } from 'react-dnd-multi-backend';
 import { ThemeProvider, TicketProvider, ToastProvider } from './contexts';
-import { ThemeSelector, Button, ErrorBoundary, ResponsiveTestPanel, AccessibilityChecker, MotionWrapper } from './components/ui';
+import { ThemeSelector, Button, ErrorBoundary, ResponsiveTestPanel, AccessibilityChecker, MotionWrapper, DataManager } from './components/ui';
 import MobileErrorBoundary from './components/ui/MobileErrorBoundary';
 import { TicketModal } from './components/ticket';
 import BoardDemo from './components/BoardDemo';
@@ -16,6 +16,7 @@ function App() {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [isTestPanelOpen, setIsTestPanelOpen] = useState(false);
   const [isA11yCheckerOpen, setIsA11yCheckerOpen] = useState(false);
+  const [isDataManagerOpen, setIsDataManagerOpen] = useState(false);
 
   const handleCreateTicket = () => {
     setIsTicketModalOpen(true);
@@ -27,8 +28,7 @@ function App() {
 
   const handleTicketCreated = () => {
     console.log('Ticket created successfully!');
-    // Close the modal after ticket is created
-    setIsTicketModalOpen(false);
+    // Modal will be closed by the TicketModal component itself
   };
 
   const handleOpenTestPanel = () => {
@@ -45,6 +45,14 @@ function App() {
 
   const handleCloseA11yChecker = () => {
     setIsA11yCheckerOpen(false);
+  };
+
+  const handleOpenDataManager = () => {
+    setIsDataManagerOpen(true);
+  };
+
+  const handleCloseDataManager = () => {
+    setIsDataManagerOpen(false);
   };
 
   // Multi-backend configuration for both mouse and touch support
@@ -157,6 +165,19 @@ function App() {
                       </Button>
                     </>
                   )}
+                  <Button 
+                    variant="outline" 
+                    onClick={handleOpenDataManager}
+                    aria-label="Open data management"
+                    title="Manage data backup and storage"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                      <path d="m21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                    </svg>
+                    Data
+                  </Button>
                   <ThemeSelector />
                 </div>
               </header>
@@ -182,6 +203,11 @@ function App() {
               <AccessibilityChecker
                 isOpen={isA11yCheckerOpen}
                 onClose={handleCloseA11yChecker}
+              />
+
+              <DataManager
+                isOpen={isDataManagerOpen}
+                onClose={handleCloseDataManager}
               />
             </div>
               </TicketProvider>

@@ -89,8 +89,6 @@ export const getTicketPriorityColor = (priority: Priority): string => {
       return '#ef4444'; // red
     case Priority.HIGH:
       return '#f97316'; // orange
-    case Priority.MEDIUM:
-      return '#3b82f6'; // blue
     case Priority.LOW:
       return '#6b7280'; // gray
     default:
@@ -184,8 +182,7 @@ export const sortTicketsByPriority = (tickets: Ticket[]): Ticket[] => {
   const priorityOrder = {
     [Priority.URGENT]: 0,
     [Priority.HIGH]: 1,
-    [Priority.MEDIUM]: 2,
-    [Priority.LOW]: 3,
+    [Priority.LOW]: 2,
   };
   
   return [...tickets].sort((a, b) => {
@@ -290,3 +287,6 @@ export * from './animations';
 
 // Export mobile utilities
 export * from './mobile';
+
+// Export storage utilities
+export * from './storage';
