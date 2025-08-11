@@ -1,0 +1,42 @@
+.searchBar {
+  position: relative;
+  width: 100%;
+}
+
+.searchInput {
+  transition: all 0.2s ease;
+}
+
+.searchInput:focus-within {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.clearButton {
+  padding: 0;
+  min-width: auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+}
+
+.clearButton:hover {
+  background-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.clearButton:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .searchBar {
+    margin-bottom: var(--spacing-sm);
+  }
+}

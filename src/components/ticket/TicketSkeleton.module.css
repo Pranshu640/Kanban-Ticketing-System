@@ -1,0 +1,39 @@
+/* TicketSkeleton component styles */
+.ticketSkeleton {
+  margin-bottom: var(--spacing-sm);
+}
+
+.skeletonCard {
+  padding: var(--spacing-md);
+}
+
+.skeletonContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.prioritySection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.descriptionSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.footerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-sm);
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}

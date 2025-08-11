@@ -1,0 +1,95 @@
+/* Mobile-specific fixes for the kanban board */
+
+/* Ensure proper mobile layout */
+@media (max-width: 768px) {
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: var(--color-background, #FAF7F2);
+  }
+  
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--color-background, #FAF7F2);
+  }
+  
+  .app {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--color-background, #FAF7F2);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .app-header {
+    flex-shrink: 0;
+    background-color: var(--color-surface, #F5F1EB);
+    border-bottom: 1px solid var(--color-border, #E8E0D6);
+    padding: 1rem;
+  }
+  
+  .app-main {
+    flex: 1;
+    background-color: var(--color-background, #FAF7F2);
+    padding: 0.5rem;
+    overflow: hidden;
+  }
+  
+  /* Fix for board demo */
+  .demo {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-background, #FAF7F2);
+  }
+  
+  /* Ensure columns are visible */
+  .columnsContainer {
+    display: flex !important;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .boardColumn {
+    min-width: 280px;
+    flex-shrink: 0;
+    background-color: var(--color-surface, #F5F1EB);
+    border: 1px solid var(--color-border, #E8E0D6);
+    border-radius: 0.5rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0.75rem;
+  }
+  
+  .app-main {
+    padding: 0.25rem;
+  }
+  
+  .boardColumn {
+    min-width: 260px;
+  }
+}
+
+/* Force visibility of content */
+.board, .demo, .boardContent, .columnsContainer {
+  background-color: var(--color-background, #FAF7F2) !important;
+}
+
+/* Ensure filter button is properly styled */
+button {
+  background-color: var(--color-primary, #8B4513) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.375rem !important;
+  font-weight: 500 !important;
+}

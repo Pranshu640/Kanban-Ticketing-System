@@ -1,0 +1,325 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: var(--spacing-lg);
+}
+
+.panel {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 700px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+.closeButton:hover {
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.closeButton:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.content {
+  padding: var(--spacing-lg);
+}
+
+.scanning {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+}
+
+.scanningIcon {
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-primary);
+  display: flex;
+  justify-content: center;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+}
+
+.score {
+  text-align: center;
+}
+
+.scoreValue {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.scoreDetails {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.breakdown {
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.breakdownItem {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.breakdownItem span:first-child {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.breakdownItem span:last-child {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.errorCount {
+  color: var(--color-error);
+}
+
+.warningCount {
+  color: var(--color-warning);
+}
+
+.infoCount {
+  color: var(--color-info);
+}
+
+.issues {
+  margin-bottom: var(--spacing-xl);
+}
+
+.issuesTitle {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.issuesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.issue {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background);
+}
+
+.issue.error {
+  border-left: 4px solid var(--color-error);
+}
+
+.issue.warning {
+  border-left: 4px solid var(--color-warning);
+}
+
+.issue.info {
+  border-left: 4px solid var(--color-info);
+}
+
+.issueIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.issue.error .issueIcon {
+  color: var(--color-error);
+}
+
+.issue.warning .issueIcon {
+  color: var(--color-warning);
+}
+
+.issue.info .issueIcon {
+  color: var(--color-info);
+}
+
+.issueContent {
+  flex: 1;
+}
+
+.issueHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xs);
+}
+
+.issueElement {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.issueType {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+}
+
+.issue.error .issueType {
+  background: var(--color-error);
+  color: white;
+}
+
+.issue.warning .issueType {
+  background: var(--color-warning);
+  color: white;
+}
+
+.issue.info .issueType {
+  background: var(--color-info);
+  color: white;
+}
+
+.issueDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.issueSuggestion {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .overlay {
+    padding: var(--spacing-md);
+  }
+
+  .panel {
+    max-height: 90vh;
+  }
+
+  .summary {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    text-align: center;
+  }
+
+  .breakdown {
+    justify-content: center;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}
+
+/* Theme-specific adjustments */
+[data-theme="high-contrast"] .panel {
+  border: 2px solid var(--color-border);
+}
+
+[data-theme="high-contrast"] .header {
+  border-bottom: 2px solid var(--color-border);
+}
+
+[data-theme="high-contrast"] .summary,
+[data-theme="high-contrast"] .issue {
+  border: 2px solid var(--color-border);
+}
+
+[data-theme="minimalist"] .panel {
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid var(--color-border);
+}
+
+[data-theme="minimalist"] .summary,
+[data-theme="minimalist"] .issue {
+  border-radius: 0;
+}
+
+[data-theme="creative-vibrant"] .panel {
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-surface) 100%);
+}
+
+/* Animation utilities */
+.panel * {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-timing),
+    background var(--theme-transition-duration) var(--theme-transition-timing),
+    border-color var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .scanningIcon {
+    animation: none;
+  }
+  
+  .issue {
+    animation: none;
+  }
+}

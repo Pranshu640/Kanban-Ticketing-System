@@ -1,0 +1,241 @@
+/* Ticket wrapper for drag and drop */
+.ticketWrapper {
+  cursor: grab;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.ticketWrapper:active {
+  cursor: grabbing;
+}
+
+.ticketWrapper.dragging {
+  opacity: 0.3;
+  transform: rotate(3deg) scale(0.95);
+  cursor: grabbing;
+  z-index: 1000;
+}
+
+.ticketWrapper.dragging::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, var(--color-primary-alpha), rgba(var(--color-primary-rgb, 139, 69, 19), 0.2));
+  border-radius: var(--border-radius-md);
+  pointer-events: none;
+}
+
+/* Ticket component styles */
+.ticket {
+  margin-bottom: var(--spacing-md);
+  transition: all 0.2s ease;
+}
+
+.ticket:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.ticketContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.ticketActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.ticket:hover .ticketActions {
+  opacity: 1;
+}
+
+/* Priority section */
+.prioritySection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+}
+
+.priorityIcon {
+  flex-shrink: 0;
+}
+
+.priorityLabel {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.priorityLabel.urgent {
+  color: var(--color-error);
+}
+
+.priorityLabel.high {
+  color: var(--color-warning);
+}
+
+.priorityLabel.medium {
+  color: var(--color-info);
+}
+
+.priorityLabel.low {
+  color: var(--color-text-secondary);
+}
+
+/* Description */
+.description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Estimated hours */
+.estimatedHours {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ticket {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .ticketActions {
+    opacity: 1;
+    /* Always show actions on mobile */
+    gap: var(--spacing-sm);
+    /* Larger gaps for touch */
+  }
+
+  .description {
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+    /* Better readability on mobile */
+  }
+
+  .prioritySection {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .priorityLabel {
+    font-size: var(--font-size-sm);
+  }
+
+  .estimatedHours {
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .ticketWrapper {
+    /* Better touch feedback */
+    touch-action: manipulation;
+  }
+
+  .ticket {
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .ticketActions {
+    gap: var(--spacing-xs);
+  }
+
+  .description {
+    font-size: var(--font-size-xs);
+  }
+
+  .priorityLabel {
+    font-size: var(--font-size-xs);
+  }
+
+  .estimatedHours {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .ticketWrapper {
+    /* Optimize for touch dragging */
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .ticketWrapper:active {
+    cursor: grabbing;
+  }
+
+  .ticket:hover {
+    /* Remove hover effects on touch devices */
+    transform: none;
+    box-shadow: var(--shadow-md);
+  }
+
+  .ticket:active {
+    /* Add touch feedback */
+    transform: scale(0.98);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .ticketActions {
+    /* Always visible on touch devices */
+    opacity: 1;
+  }
+
+  /* Larger touch targets for action buttons */
+  .ticketActions button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--spacing-sm);
+  }
+
+  /* Better drag feedback on touch */
+  .ticketWrapper.dragging {
+    opacity: 0.7;
+    transform: rotate(5deg) scale(1.05);
+    z-index: 1000;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Focus states for accessibility */
+.ticket:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Animation for priority indicators */
+.priorityLabel.urgent {
+  animation: urgentPulse 2s infinite;
+}
+
+@keyframes urgentPulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}

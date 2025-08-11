@@ -1,0 +1,40 @@
+.pulseLoader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.dot {
+  border-radius: 50%;
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+/* Size variants */
+.small .dot {
+  width: 6px;
+  height: 6px;
+}
+
+.medium .dot {
+  width: 8px;
+  height: 8px;
+}
+
+.large .dot {
+  width: 12px;
+  height: 12px;
+}
+
+/* Color variants */
+.dot.primary {
+  background-color: var(--color-primary);
+}
+
+.dot.secondary {
+  background-color: var(--color-secondary);
+}
+
+.dot.accent {
+  background-color: var(--color-accent);
+}

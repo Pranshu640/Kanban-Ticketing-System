@@ -1,0 +1,374 @@
+.filterPanel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.filterPanel.collapsed {
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.toggleButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  position: relative;
+}
+
+.filterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.filterTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+}
+
+.filterBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--spacing-xs);
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 10px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.filterActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.clearButton {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.clearButton:hover {
+  color: var(--color-text);
+}
+
+.collapseButton {
+  color: var(--color-text-secondary);
+}
+
+.collapseButton:hover {
+  color: var(--color-text);
+}
+
+.filterContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.advancedToggle {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-xs) 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.advancedToggleButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.advancedToggleButton:hover {
+  color: var(--color-text);
+}
+
+.advancedFilters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding-top: var(--spacing-sm);
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: background-color 0.2s ease;
+}
+
+.checkboxLabel:hover {
+  background-color: var(--color-border);
+}
+
+.checkbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.checkboxIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-surface);
+  transition: all 0.2s ease;
+  color: transparent;
+}
+
+.checkbox:checked + .checkboxIndicator {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.checkbox:focus + .checkboxIndicator {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.checkboxText {
+  flex: 1;
+  user-select: none;
+}
+
+.filterSummary {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+}
+
+.summaryTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.summaryItems {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.summaryItem {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  padding: 2px var(--spacing-xs);
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .filterPanel {
+    padding: var(--spacing-sm);
+  }
+  
+  .filterContent {
+    gap: var(--spacing-sm);
+  }
+  
+  .advancedFilters {
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 768px) and (min-width: 481px) {
+  .filterPanel:not(.collapsed) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    border-radius: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: var(--spacing-lg);
+    background-color: var(--color-background);
+  }
+  
+  .filterPanel.collapsed {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    background-color: var(--color-surface);
+  }
+  
+  .filterHeader {
+    position: sticky;
+    top: 0;
+    background-color: var(--color-background);
+    z-index: 1;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-border);
+  }
+  
+  .filterContent {
+    padding-bottom: var(--spacing-xl);
+  }
+  
+  .toggleButton {
+    min-height: 44px; /* Touch-friendly */
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .filterPanel:not(.collapsed) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    border-radius: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: var(--spacing-md);
+    background-color: var(--color-background);
+    border: none;
+  }
+  
+  .filterPanel.collapsed {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    background-color: var(--color-surface);
+    padding: 0;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .filterHeader {
+    position: sticky;
+    top: 0;
+    background-color: var(--color-background);
+    z-index: 1;
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-border);
+  }
+  
+  .filterTitle {
+    font-size: var(--font-size-lg);
+  }
+  
+  .filterContent {
+    padding-bottom: var(--spacing-xl);
+    gap: var(--spacing-lg);
+  }
+  
+  .filterGroup {
+    gap: var(--spacing-sm);
+  }
+  
+  .toggleButton {
+    min-height: 44px; /* Touch-friendly */
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-md);
+  }
+  
+  .checkboxLabel {
+    min-height: 44px; /* Touch-friendly */
+    padding: var(--spacing-sm);
+  }
+  
+  .checkboxIndicator {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .clearButton,
+  .collapseButton,
+  .advancedToggleButton {
+    min-height: 44px; /* Touch-friendly */
+    padding: var(--spacing-sm);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .filterPanel {
+    /* Better scrolling on touch devices */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  .checkboxLabel:hover {
+    background-color: transparent; /* Remove hover effects on touch */
+  }
+  
+  .checkboxLabel:active {
+    background-color: var(--color-border);
+    transform: scale(0.98);
+  }
+  
+  .toggleButton:active,
+  .clearButton:active,
+  .collapseButton:active,
+  .advancedToggleButton:active {
+    transform: scale(0.98);
+    background-color: var(--color-border);
+  }
+}
+
+/* Backdrop for mobile overlay */
+@media (max-width: 768px) {
+  .filterPanel:not(.collapsed)::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    backdrop-filter: blur(2px);
+  }
+}

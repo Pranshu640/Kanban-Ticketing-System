@@ -1,0 +1,82 @@
+.ticketModal {
+  max-width: 800px;
+  width: 90vw;
+}
+
+/* Success message styling */
+.successMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  gap: var(--spacing-md);
+}
+
+.successIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+  color: white;
+  animation: successPulse 0.6s ease-out;
+}
+
+.successTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.successDescription {
+  font-size: var(--font-size-md);
+  color: var(--color-textSecondary);
+  margin: 0;
+  max-width: 400px;
+}
+
+/* Success animation */
+@keyframes successPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Modal content adjustments */
+.ticketModal :global(.modal-content) {
+  padding: var(--spacing-lg);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .ticketModal {
+    width: 95vw;
+    max-width: none;
+  }
+  
+  .successMessage {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+  
+  .successIcon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .successIcon svg {
+    width: 32px;
+    height: 32px;
+  }
+}

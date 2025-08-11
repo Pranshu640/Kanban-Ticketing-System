@@ -1,0 +1,147 @@
+.errorBoundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: var(--spacing-xl);
+  background: var(--color-background);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.errorContent {
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.errorIcon {
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-error);
+  display: flex;
+  justify-content: center;
+}
+
+.errorText {
+  margin-bottom: var(--spacing-xl);
+}
+
+.errorTitle {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.errorMessage {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.errorDetails {
+  margin-top: var(--spacing-lg);
+  text-align: left;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+}
+
+.errorDetails summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.errorDetails summary:hover {
+  color: var(--color-primary);
+}
+
+.errorStack {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  background: var(--color-background);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: var(--spacing-sm) 0 0 0;
+}
+
+.errorActions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.retryButton,
+.reloadButton {
+  min-width: 120px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .errorBoundary {
+    min-height: 300px;
+    padding: var(--spacing-lg);
+  }
+
+  .errorContent {
+    max-width: 100%;
+  }
+
+  .errorActions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .retryButton,
+  .reloadButton {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+/* High contrast theme adjustments */
+[data-theme="high-contrast"] .errorBoundary {
+  border: 2px solid var(--color-border);
+}
+
+[data-theme="high-contrast"] .errorDetails {
+  border: 2px solid var(--color-border);
+}
+
+[data-theme="high-contrast"] .errorStack {
+  border: 2px solid var(--color-border);
+}
+
+/* Dark theme adjustments */
+[data-theme="professional-dark"] .errorStack {
+  background: var(--color-surface);
+}
+
+/* Animation utilities */
+.errorBoundary * {
+  transition: color var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+/* Focus styles */
+.errorDetails summary:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .errorBoundary {
+    animation: none;
+  }
+}

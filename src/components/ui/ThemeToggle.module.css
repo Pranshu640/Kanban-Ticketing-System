@@ -1,0 +1,150 @@
+.themeToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+.toggleButton:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.toggleTrack {
+  width: 48px;
+  height: 24px;
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.toggleThumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  position: relative;
+}
+
+.brownieContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.brownieButton {
+  font-size: 1.2em;
+  padding: var(--spacing-xs);
+  border-radius: 50%;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brownieButton:hover {
+  transform: rotate(15deg) scale(1.1);
+  background: var(--color-warning-alpha);
+}
+
+.brownieHint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.brownieExit {
+  display: flex;
+  align-items: center;
+}
+
+.exitButton {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .themeToggle {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .brownieContainer {
+    flex-direction: row;
+    gap: var(--spacing-sm);
+  }
+
+  .brownieHint {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* Theme-specific adjustments */
+[data-theme="brownie"] .toggleButton {
+  border: 1px solid var(--color-primary);
+}
+
+[data-theme="brownie"] .toggleTrack {
+  border: 1px solid var(--color-primary);
+  background: var(--color-surface) !important;
+}
+
+[data-theme="brownie"] .toggleThumb {
+  background: var(--color-primary) !important;
+  color: var(--color-background);
+  text-shadow: none;
+}
+
+[data-theme="brownie"] .brownieButton {
+  border: 1px solid var(--color-secondary);
+  text-shadow: 0 0 2px currentColor;
+}
+
+[data-theme="brownie"] .exitButton {
+  border: 1px solid var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+  text-shadow: 0 0 2px currentColor;
+}
+
+[data-theme="brownie"] .exitButton:hover {
+  background: var(--color-primary);
+  color: var(--color-background);
+  text-shadow: none;
+}
+
+/* Animation utilities */
+.themeToggle * {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-timing),
+    background var(--theme-transition-duration) var(--theme-transition-timing),
+    border-color var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .toggleThumb {
+    animation: none;
+  }
+  
+  .brownieButton:hover {
+    transform: none;
+  }
+}

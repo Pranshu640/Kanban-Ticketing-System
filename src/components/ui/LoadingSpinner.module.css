@@ -1,0 +1,38 @@
+.loadingSpinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.spinner {
+  transition: color var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+.spinner.primary {
+  color: var(--color-primary);
+}
+
+.spinner.secondary {
+  color: var(--color-secondary);
+}
+
+.spinner.white {
+  color: #ffffff;
+}
+
+.loadingText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  text-align: center;
+}
+
+.small .loadingText {
+  font-size: var(--font-size-xs);
+}
+
+.large .loadingText {
+  font-size: var(--font-size-md);
+}

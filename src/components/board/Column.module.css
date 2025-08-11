@@ -1,0 +1,382 @@
+/* Column component styles */
+.column {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  height: fit-content;
+  min-height: 400px;
+  max-height: calc(100vh - 200px);
+  transition: all 0.2s ease;
+}
+
+/* Drop target styles */
+.column.dropTarget {
+  border-color: var(--color-primary);
+  background-color: rgba(var(--color-primary-rgb, 59, 130, 246), 0.05);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb, 59, 130, 246), 0.2);
+  transform: scale(1.02);
+}
+
+.column.invalidDrop {
+  border-color: var(--color-error);
+  background-color: rgba(var(--color-error-rgb, 239, 68, 68), 0.05);
+  box-shadow: 0 0 0 2px rgba(var(--color-error-rgb, 239, 68, 68), 0.2);
+}
+
+.column:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Column header */
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.columnTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.columnIndicator {
+  width: 4px;
+  height: 20px;
+  border-radius: var(--border-radius-sm);
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.columnMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.ticketCount {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  min-width: 24px;
+  justify-content: center;
+}
+
+.ticketCount.overLimit {
+  background-color: var(--color-error);
+  animation: pulse 2s infinite;
+}
+
+.limit {
+  opacity: 0.8;
+}
+
+/* Column content */
+.columnContent {
+  flex: 1;
+  padding: var(--spacing-md);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.ticketList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Drop indicator */
+.dropIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-sm) 0;
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--border-radius-md);
+  background-color: rgba(var(--color-primary-rgb, 59, 130, 246), 0.05);
+  animation: dropPulse 1.5s ease-in-out infinite;
+}
+
+.dropIndicatorContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Invalid drop indicator */
+.dropIndicatorInvalid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-sm) 0;
+  border: 2px dashed var(--color-error);
+  border-radius: var(--border-radius-md);
+  background-color: rgba(var(--color-error-rgb, 239, 68, 68), 0.05);
+  animation: invalidDropPulse 1s ease-in-out infinite;
+}
+
+.dropIndicatorInvalid .dropIndicatorContent {
+  color: var(--color-error);
+}
+
+@keyframes dropPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes invalidDropPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.01);
+  }
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+  min-height: 200px;
+}
+
+.emptyIcon {
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+  margin-bottom: var(--spacing-md);
+}
+
+.emptyText {
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.emptySubtext {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+  margin: 0;
+  max-width: 200px;
+  line-height: 1.4;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .column {
+    min-height: 350px;
+    max-height: calc(100vh - 180px);
+  }
+  
+  .columnContent {
+    overflow-y: auto;
+  }
+}
+
+/* Tablet layout */
+@media (max-width: 768px) {
+  .column {
+    min-height: 400px;
+    max-height: calc(100vh - 160px);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .columnHeader {
+    padding: var(--spacing-md);
+    flex-shrink: 0;
+  }
+  
+  .title {
+    font-size: var(--font-size-md);
+  }
+  
+  .columnContent {
+    padding: var(--spacing-sm) var(--spacing-md);
+    overflow-y: auto;
+    flex: 1;
+  }
+  
+  .emptyState {
+    padding: var(--spacing-lg);
+    min-height: 200px;
+  }
+  
+  .emptyIcon svg {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .dropIndicator,
+  .dropIndicatorInvalid {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md) 0;
+    min-height: 60px;
+  }
+}
+
+/* Mobile layout */
+@media (max-width: 480px) {
+  .column {
+    min-height: 350px;
+    max-height: calc(100vh - 140px);
+  }
+  
+  .columnHeader {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .title {
+    font-size: var(--font-size-sm);
+  }
+  
+  .columnContent {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    overflow-y: auto;
+  }
+  
+  .emptyState {
+    padding: var(--spacing-md);
+    min-height: 150px;
+  }
+  
+  .emptyIcon svg {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .emptyText {
+    font-size: var(--font-size-sm);
+  }
+  
+  .emptySubtext {
+    font-size: var(--font-size-xs);
+  }
+  
+  .ticketCount {
+    font-size: var(--font-size-xs);
+    padding: 2px var(--spacing-xs);
+    min-width: 20px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .column {
+    /* Better touch scrolling */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  .columnContent {
+    /* Better touch scrolling */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+
+  
+  /* Larger drop zones for touch */
+  .dropIndicator,
+  .dropIndicatorInvalid {
+    min-height: 80px;
+    padding: var(--spacing-xl);
+    font-size: var(--font-size-md);
+  }
+  
+  .dropIndicatorContent {
+    gap: var(--spacing-sm);
+  }
+  
+  .dropIndicatorContent svg {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* Remove hover effects on touch devices */
+  .column:hover {
+    box-shadow: var(--shadow-sm);
+    transform: none;
+  }
+  
+  /* Add touch feedback */
+  .column:active {
+    transform: scale(0.99);
+  }
+}
+
+/* Animation for over-limit indicator */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Scrollbar styling */
+.columnContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.columnContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.columnContent::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--border-radius-sm);
+}
+
+.columnContent::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* Focus states for accessibility */
+.column:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
