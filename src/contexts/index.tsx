@@ -225,6 +225,7 @@ interface TicketContextType {
     clearFilters: () => void;
     refreshBoard: () => void;
     useMockData: () => void;
+    resetBoard: () => void;
   };
 }
 
@@ -436,7 +437,7 @@ interface TicketProviderProps {
 }
 
 // Import enhanced storage utilities
-import { saveBoard, loadBoard, saveFilters, loadFilters } from '../utils/storage';
+import { saveBoard, loadBoard, saveFilters, loadFilters, storage } from '../utils/storage';
 
 // Ticket Provider Component
 export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
@@ -556,6 +557,15 @@ export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
     dispatch({ type: 'LOAD_BOARD', payload: mockBoard });
   };
 
+  const resetBoard = () => {
+    // Clear persisted board and filters
+    storage.remove('board');
+    storage.remove('filters');
+    const empty = generateEmptyBoard();
+    dispatch({ type: 'LOAD_BOARD', payload: empty });
+    dispatch({ type: 'CLEAR_FILTERS' });
+  };
+
   const contextValue: TicketContextType = {
     state,
     actions: {
@@ -567,6 +577,7 @@ export const TicketProvider: React.FC<TicketProviderProps> = ({ children }) => {
       clearFilters,
       refreshBoard,
       useMockData,
+      resetBoard,
     },
   };
 

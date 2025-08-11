@@ -11,20 +11,60 @@ import BoardDemo from './components/BoardDemo';
 import { shouldUseTouchBackend } from './utils';
 import './App.css';
 import './mobile-fix.css';
+import { ConfirmationModal } from './components/ui';
+
+const MockDataButton = () => {
+  const { actions } = useTickets();
+  return (
+    <Button
+      variant="outline"
+      onClick={() => actions.useMockData()}
+      aria-label="Load mock data"
+      title="Populate board with mock tickets"
+    >
+      Use Mock Data
+    </Button>
+  );
+};
+
+const ResetBoardButton = () => {
+  const { actions } = useTickets();
+  const [open, setOpen] = useState(false);
+  const onReset = () => setOpen(true);
+  const onClose = () => setOpen(false);
+  const onConfirm = () => {
+    actions.resetBoard();
+    setOpen(false);
+  };
+  return (
+    <>
+      <Button
+        variant="outline"
+        onClick={onReset}
+        aria-label="Reset board"
+        title="Clear all tickets and filters"
+      >
+        Reset Board
+      </Button>
+      <ConfirmationModal
+        isOpen={open}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        title="Reset Board"
+        message="This will clear all tickets and filters and reset the board to an empty state. This action cannot be undone."
+        confirmText="Reset"
+        cancelText="Cancel"
+        variant="warning"
+      />
+    </>
+  );
+};
 
 function App() {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [isTestPanelOpen, setIsTestPanelOpen] = useState(false);
   const [isA11yCheckerOpen, setIsA11yCheckerOpen] = useState(false);
   const [isDataManagerOpen, setIsDataManagerOpen] = useState(false);
-
-  const ticketsCtx = (() => {
-    try {
-      return useTickets();
-    } catch {
-      return null;
-    }
-  })();
 
   const handleCreateTicket = () => {
     setIsTicketModalOpen(true);
@@ -144,14 +184,8 @@ function App() {
                   >
                     Create Ticket
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => ticketsCtx?.actions.useMockData()}
-                    aria-label="Load mock data"
-                    title="Populate board with mock tickets"
-                  >
-                    Use Mock Data
-                  </Button>
+                  <MockDataButton />
+                  <ResetBoardButton />
                   {import.meta.env.DEV && (
                     <>
                       <Button 
